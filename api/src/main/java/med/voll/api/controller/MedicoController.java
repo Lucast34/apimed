@@ -20,8 +20,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import jakarta.validation.Valid;
 import med.voll.api.medico.DadosAtualizacaoMedico;
 import med.voll.api.medico.DadosCadastroMedico;
+import med.voll.api.medico.DadosDetalhamentoMedico;
 import med.voll.api.medico.DadosListagemMedico;
 import med.voll.api.medico.MedicoRepository;
+import med.voll.api.medico.Medico;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -33,19 +36,20 @@ public class MedicoController {
     @PostMapping
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuild){
-        var medico
+        var medico = new Medico(dados);
+        repository.save(medico);
+        var uri = uriBuild.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(medico));
+
     }
 
-    /* 
-    public void cadastrar(@RequestBody @Valid DadosCadastroMedico dados) {
-        repository.save(new Medico(dados));
-    }
-    */
 
     @GetMapping
-    public Page<DadosListagemMedico> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new);
+    public ResponseEntity<Page<DadosListagemMedico>> listar(@PageableDefault(size = 10,sort = {"nome"})Pageable pagincao){
+        var page = repository.findAllByAtivoTrue(pagincao).map(DadosListagemMedico::new);
+        return ResponseEntity.ok(page);
     }
+  
 
     @PutMapping
     @Transactional
@@ -56,9 +60,16 @@ public class MedicoController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void excluir(@PathVariable Long id) {
+    public ResponseEntity excluir(@PathVariable Long id) {
         var medico = repository.getReferenceById(id);
         medico.excluir();
+        return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity detalhar(@PathVariable Long id) {
+        var medico = repository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
+    }
+    
 }
