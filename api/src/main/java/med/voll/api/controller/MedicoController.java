@@ -1,6 +1,5 @@
 package med.voll.api.controller;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +23,7 @@ import med.voll.api.medico.DadosDetalhamentoMedico;
 import med.voll.api.medico.DadosListagemMedico;
 import med.voll.api.medico.MedicoRepository;
 import med.voll.api.medico.Medico;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
