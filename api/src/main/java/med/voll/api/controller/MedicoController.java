@@ -25,7 +25,6 @@ import med.voll.api.medico.MedicoRepository;
 import med.voll.api.medico.Medico;
 
 
-
 @RestController
 @RequestMapping("/medicos")
 public class MedicoController {
