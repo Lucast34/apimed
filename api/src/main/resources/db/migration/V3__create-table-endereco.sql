@@ -6,8 +6,13 @@ create table tb_endereco(
     complemento varchar(100),
     numero varchar(20),
     uf char(2) not null,
-    cidade varchar(100) not null,
-    Fk_id_medico bigint ,
+    cidade varchar(100) not null
+   
+);
+
+/*
+ Fk_id_medico bigint ,
     
     Constraint Fk_id_medico_endereco foreign key (Fk_id_medico) References medicos(id)
-);
+
+*/
